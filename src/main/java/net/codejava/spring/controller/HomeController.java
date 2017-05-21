@@ -31,7 +31,7 @@ public class HomeController {
 	public ModelAndView listContact(ModelAndView model) throws IOException{
 		List<Contact> listContact = contactBLO.getListContact();
 		model.addObject("listContact", listContact);
-		model.setViewName("home");
+		model.setViewName("demo-page/home");
 		
 		return model;
 	}
@@ -40,7 +40,7 @@ public class HomeController {
 	public ModelAndView newContact(ModelAndView model) {
 		Contact newContact = new Contact();
 		model.addObject("contact", newContact);
-		model.setViewName("ContactForm");
+		model.setViewName("demo-page/ContactForm");
 		return model;
 	}
 	
@@ -61,7 +61,7 @@ public class HomeController {
 	public ModelAndView editContact(HttpServletRequest request) {
 		int contactId = Integer.parseInt(request.getParameter("id"));
 		Contact contact = contactBLO.getContact(contactId);
-		ModelAndView model = new ModelAndView("ContactForm");
+		ModelAndView model = new ModelAndView("demo-page/ContactForm");
 		model.addObject("contact", contact);
 		
 		return model;
