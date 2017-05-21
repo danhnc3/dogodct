@@ -27,11 +27,18 @@ public class HomeController {
 	@Autowired
 	private ContactBLO contactBLO;
 	
-	@RequestMapping(value="/")
+    /*@RequestMapping(value="/")
 	public ModelAndView listContact(ModelAndView model) throws IOException{
 		List<Contact> listContact = contactBLO.getListContact();
 		model.addObject("listContact", listContact);
 		model.setViewName("demo-page/home");
+		
+		return model;
+	}*/
+	
+	@RequestMapping(value="/")
+	public ModelAndView listContact(ModelAndView model) throws IOException{
+		model.setViewName("home-page/index");
 		
 		return model;
 	}
