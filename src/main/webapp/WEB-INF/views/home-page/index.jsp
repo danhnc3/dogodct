@@ -21,7 +21,7 @@
 		<div class="row">
 			<img src="/SpringMvcJdbcTemplate/resources/images/9874_logo_03.png" style="width: 200px; height: 100px">
 			<ul id="nav" class="menuHeader">
-		        <li><a href="#">Trang chủ</a>
+		        <li><a href="${pageContext.request.contextPath}/">Trang chủ</a>
 		        </li>
 		        <li><a href="#">Giới thiệu</a>
 		        </li>
@@ -32,7 +32,7 @@
 		                <li><a href="#">Bàn ăn</a></li>
 		            </ul>
 		        </li>
-		        <li><a href="#">Thiết kế online</a></li>
+		        <li><a href="${pageContext.request.contextPath}/design-online.html">Thiết kế online</a></li>
 		        <li><a href="#">Tin tức</a></li>
 		        <li><a href="#">Liên hệ</a></li>
 		    </ul>
