@@ -13,6 +13,9 @@
     <script src="${pageContext.request.contextPath}/resources/js/jquery-2.2.1.js"></script>
     <script src="${pageContext.request.contextPath}/resources/js/menuscript.js"></script>
     <script src="${pageContext.request.contextPath}/resources/js/three.min.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/ColladaLoader.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/Detector.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/stats.min.js"></script>
 </head>
 <body>
 	<div class="header-container">
@@ -39,55 +42,118 @@
 	<div class="designOnline" id="bodyWrapper">
 	    <script src="${pageContext.request.contextPath}/resources/js/OrbitControls.js"></script>
 	    <script src="${pageContext.request.contextPath}/resources/js/JDLoader.min.js"></script>
+	    <div id="container"></div>	    
+	    
 	    <script>
-		    var scene, camera, renderer;
-		    var geometry, material, mesh;
-	
-		    init();
-		    animate();
-	
-		    function init() {
+
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+			var container, stats;
+			var camera, scene, renderer, controls;
+
+			init();
+			animate();
+
+			function init() {
 				var width = $("#bodyWrapper").width();
 				var height = $("#bodyWrapper").height();
-		    	scene = new THREE.Scene();
-	
-		    	camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-		    	camera.position.z = 1000;
-	
-		    	geometry = new THREE.BoxGeometry( 200, 200, 200 );
-		    	material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
-	
-		    	mesh = new THREE.Mesh( geometry, material );
-		    	scene.add( mesh );
-	
-		    	renderer = new THREE.WebGLRenderer();
-		    	renderer.setSize( width, height );
-	
-		    	$("#bodyWrapper").append( renderer.domElement );
-	
-		    }
-	
-		    function animate() {
-	
-		    	requestAnimationFrame( animate );
-	
-		    	mesh.rotation.x += 0.01;
-		    	mesh.rotation.y += 0.02;
-	
-		    	renderer.render( scene, camera );
-	
-		    }
-	        function onWindowResize()
-	        {
-	            if (camera)
-	            {
-	              camera.aspect = window.innerWidth / window.innerHeight;
-	              camera.updateProjectionMatrix();
-	            }
-	            renderer.setSize(window.innerWidth, window.innerHeight);
-	        }
-	
-	    </script>
+
+				container = document.getElementById( 'container' );
+
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+				camera.position.set( 7, 5, 7 );
+
+				scene = new THREE.Scene();
+
+				// collada
+
+				var loader = new THREE.ColladaLoader();
+				loader.options.convertUpAxis = true;
+				var urlImg = "./resources/models/model.dae";
+				loader.load( urlImg, function ( collada ) {
+				// loader.load( './models/collada/monster/monster.dae', function ( collada ) {
+
+					var object = collada.scene;
+
+					/* object.scale.set( 0.0025, 0.0025, 0.0025 ); */
+					object.scale.set( 0.05, 0.05, 0.05 );
+					object.position.set( - 2, 0.2, 0 );
+
+					scene.add( object );
+
+				} );
+
+				// Background 3D
+
+				var gridHelper = new THREE.GridHelper( 10, 10 );
+				scene.add( gridHelper );
+				
+				/* var light = new THREE.RectAreaLight( 0xffffbb, 1.0, 5, 5 );
+				var helper = new THREE.RectAreaLightHelper( light );
+				scene.add( helper ); */
+
+				//
+
+				var ambientLight = new THREE.AmbientLight( 0xcccccc );
+				scene.add( ambientLight );
+
+				var directionalLight = new THREE.DirectionalLight( 0xffffff );
+				directionalLight.position.set( 0, 1, -1 ).normalize();
+				scene.add( directionalLight );
+
+				//
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				// Set size for DOM
+				renderer.setSize( width, height );
+				container.appendChild( renderer.domElement );
+
+				//
+
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+				//
+
+				// stats = new Stats();
+				// container.appendChild( stats.dom );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				render();
+				stats.update();
+
+			}
+
+			function render() {
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+	    
+	    
+	    
+	    
+	    
 	</div>
 </body>
 </html>
